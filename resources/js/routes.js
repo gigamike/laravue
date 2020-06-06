@@ -1,6 +1,7 @@
 import VueRouter from "vue-router";
 
 import HomeComponent from "./components/HomeComponent";
+import PostComponent from "./components/PostComponent";
 import AboutComponent from "./components/AboutComponent";
 import ContactComponent from "./components/ContactComponent";
 
@@ -8,6 +9,10 @@ const routes = [{
     path: "/",
     component: HomeComponent,
     name: "home",
+}, {
+    path: "/post/:id",
+    component: PostComponent,
+    name: "post",
 }, {
     path: "/about",
     component: AboutComponent,

@@ -14,14 +14,21 @@
             </b-breadcrumb>
             <b-row>
                 <b-col cols="8" md="8" class="mt-1 mb-4">
-                    <b-card header-tag="header" footer-tag="footer" img-src="http://placehold.it/750x300" id="my-blog" v-for="post in posts" :key="post.id" :per-page="perPage" :current-page="currentPage" class="mb-4">
-                        <h2>{{ post.title }}</h2>
-                        <b-card-text>{{ post.body }}</b-card-text>
-                        <a href="#" class="btn btn-primary">Read More &rarr;</a>
-                        <template v-slot:footer>
+                    <b-card no-body header-tag="header" footer-tag="footer" id="my-blog" v-for="post in posts" :key="post.id" :per-page="perPage" :current-page="currentPage" class="mb-4">
+                        <router-link :to="{ name: 'post', params: { id: post.id }}">
+                            <b-card-img src="http://placehold.it/750x300" alt="Image" top></b-card-img>
+                        </router-link>
+                        <b-card-body>
+                            <router-link :to="{ name: 'post', params: { id: post.id }}">
+                                <b-card-title>{{ post.title }}</b-card-title>
+                            </router-link>
+                            <b-card-text>{{ post.body }}</b-card-text>
+                            <router-link :to="{ name: 'post', params: { id: post.id }}" class="btn btn-primary">Read More &rarr;</router-link>
+                        </b-card-body>
+                        <b-card-footer>
                             Posted on {{ post.created_at }} by
                             <a href="#">Start Bootstrap</a>
-                        </template>
+                        </b-card-footer>
                     </b-card>
                     <!-- Pagination -->
                     <div class="overflow-auto">
@@ -112,9 +119,9 @@ export default {
                 .then((response) => {
                     console.log(response);
                     this.posts = response.data.data;
-                    this.perPage = response.data.per_page;
-                    this.currentPage = response.data.current_page;
-                    this.total = response.data.total;
+                    this.perPage = response.data.meta.per_page;
+                    this.currentPage = response.data.meta.current_page;
+                    this.total = response.data.meta.total;
                     this.loading = false;
                     this.scrollToTop();
                 });
