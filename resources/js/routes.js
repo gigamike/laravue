@@ -21,6 +21,10 @@ const routes = [{
     path: "/contact",
     component: ContactComponent,
     name: "contact",
+}, {
+    path: "/auth/login",
+    component: require("./components/auth/login").default,
+    name: "login",
 }];
 
 const router = new VueRouter({
