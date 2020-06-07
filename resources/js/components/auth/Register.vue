@@ -3,7 +3,7 @@
         <!-- Page Content -->
         <b-container>
             <!-- Page Heading/Breadcrumbs -->
-            <h1 class="mt-4 mb-3">Login
+            <h1 class="mt-4 mb-3">Register
                 <small>Subheading</small>
             </h1>
             <b-breadcrumb>
@@ -15,16 +15,26 @@
             <!-- Content Row -->
             <b-row>
                 <b-col cols=8 lg="8" clas="mb-4">
-                    <h3>Welcome Back</h3>
-                    <b-form @submit="onSubmit" id="loginForm" novalidate>
+                    <h3>Signup</h3>
+                    <b-form @submit="onSubmit" id="registerForm" novalidate>
+                        <b-form-group id="input-group-1" label="Name:" label-for="name">
+                            <b-form-input id="name" v-model="user.name" type="name" required data-validation-required-message="Please enter your name."></b-form-input>
+                            <b-form-invalid-feedback :state="errorFor('name')">
+                            </b-form-invalid-feedback>
+                        </b-form-group>
                         <b-form-group id="input-group-1" label="Email Address:" label-for="email">
-                            <b-form-input id="email" v-model="form.email" type="email" required data-validation-required-message="Please enter your email address."></b-form-input>
+                            <b-form-input id="email" v-model="user.email" type="email" required data-validation-required-message="Please enter your email address."></b-form-input>
                             <b-form-invalid-feedback :state="errorFor('email')">
                             </b-form-invalid-feedback>
                         </b-form-group>
                         <b-form-group id="input-group-2" label="Password" label-for="password">
-                            <b-form-input id="password" v-model="form.password" type="password" required data-validation-required-message="Please enter your password."></b-form-input>
+                            <b-form-input id="password" v-model="user.password" type="password" required data-validation-required-message="Please enter your password."></b-form-input>
                             <b-form-invalid-feedback :state="errorFor('password')">
+                            </b-form-invalid-feedback>
+                        </b-form-group>
+                        <b-form-group id="input-group-2" label="Re-type Password" label-for="password_confirmation">
+                            <b-form-input id="password_confirmation" v-model="user.password_confirmation" type="password" required data-validation-required-message="Confirm your password."></b-form-input>
+                            <b-form-invalid-feedback :state="errorFor('password_confirmation')">
                             </b-form-invalid-feedback>
                         </b-form-group>
                         <div id="success"></div>
@@ -36,7 +46,7 @@
                             <router-link :to="{ name: 'home'}" class="small">Forgot Password?</router-link>
                         </div>
                         <div class="text-center">
-                            <router-link :to="{ name: 'home'}" class="small">Create an Account!</router-link>
+                            <router-link :to="{ name: 'login'}" class="small">Already have an account? Login!</router-link>
                         </div>
                         <br>
                     </b-form>
@@ -66,9 +76,11 @@ export default {
         return {
             loading: false,
             errors: null,
-            form: {
+            user: {
+                name: '',
                 email: '',
                 password: '',
+                password_confirmation: '',
             }
         }
     },
@@ -79,19 +91,17 @@ export default {
         onSubmit(evt) {
             evt.preventDefault()
             // alert(JSON.stringify(this.form))
-            this.login();
+            this.register();
         },
-        async login() {
+        async register() {
             try {
-                await axios.get('/sanctum/csrf-cookie');
-                await axios.post('/login', {
-                    email: this.form.email,
-                    password: this.form.password
-                });
+                const response = await axios.post('/register', this.user);
 
-                logIn();
-                this.$store.dispatch("loadUser");
-                this.$router.push({ name: "home" });
+                if (201 == response.status) {
+                    logIn();
+                    this.$store.dispatch("loadUser");
+                    this.$router.push({ name: "home" });
+                }
             } catch (error) {
                 this.errors = error.response && error.response.data.errors;
             }
